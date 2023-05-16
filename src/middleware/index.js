@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const validator = require("email-validator");
 
 const User = require("../users/model");
 
@@ -44,9 +45,24 @@ async function comparePasswords (req,res,next){
         console.log(error)
         res.status(500).send({error: error.message})
     }
+} 
+
+async function validateEmail (req, res, next){
+    try {
+        if (validator.validate(req.body.email)) {
+            console.log("vaild email")
+            next()
+        } else {
+            throw new Error ("invaild email please try again")
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({error: error.message})
+    }
 }
 
 module.exports = {
     hashThePassword,
-    comparePasswords
+    comparePasswords,
+    validateEmail
 }
