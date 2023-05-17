@@ -4,7 +4,7 @@ const userRouter = Router();
 // This renames Router to be userRouter
 
 const {registerUser, login, readUsers, updateUser, deleteUser} = require("./controllers");
-const { hashThePassword, comparePasswords, validateEmail } = require ("../middleware")
+const { hashThePassword, comparePasswords, validateEmail, tokenCheck } = require ("../middleware")
 
 //CREATE
 
@@ -15,7 +15,7 @@ userRouter.post("/users/register", validateEmail, hashThePassword, registerUser)
 userRouter.post("/users/login", comparePasswords, login)
 
 // READ
-userRouter.get("/users/readUsers", readUsers)
+userRouter.get("/users/readUsers", tokenCheck, readUsers) // protected route
 
 //UPDATE
 userRouter.put("/users/update", updateUser)
