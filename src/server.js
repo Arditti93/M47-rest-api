@@ -8,7 +8,7 @@ const app = express();
 // This allows us to rename express to app
 
 app.use(cors()) // enable requests from any origin
-const port = process.env.PORT;
+const port = process.env.PORT || 5002 ;
 const userRouter = require("./users/routes");
 
 app.use(express.json());
