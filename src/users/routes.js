@@ -12,10 +12,14 @@ const { hashThePassword, comparePasswords, validateEmail, tokenCheck } = require
 userRouter.post("/users/register", validateEmail, hashThePassword, registerUser);
 // Creates the end point /users/register for a HTTP POST request and causes it to run registerUser
 
+// MANUAL LOGIN
 userRouter.post("/users/login", comparePasswords, login)
 
 // READ
-userRouter.get("/users/readUsers", tokenCheck, readUsers) // protected route
+userRouter.get("/users/readUsers", readUsers) // protected route
+
+//auth check for persistant login
+userRouter.get("/users/authCheck", tokenCheck, login)
 
 //UPDATE
 userRouter.put("/users/update", updateUser)

@@ -1,9 +1,13 @@
 const express = require("express");
 // This allows to setup a HTTP server
+const cors = require("cors")
+
 require("dotenv").config();
 // This allows to store enviroment variables in the .env file
 const app = express();
 // This allows us to rename express to app
+
+app.use(cors()) // enable requests from any origin
 const port = process.env.PORT;
 const userRouter = require("./users/routes");
 

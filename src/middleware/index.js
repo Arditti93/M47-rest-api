@@ -63,29 +63,30 @@ async function validateEmail (req, res, next){
 
 async function tokenCheck (req, res, next) {
     try {
+        // if the Authorization header hasn't been passed in the request
+        // throw a new error
+        if (!req.header("Authorization")) {
+            throw new Error("Unauthorised")
+        }
         // get the encoded token from the authorization header
         const token = req.header("Authorization")
-        console.log("Encoded token from the authorization header")
-        console.log(token)
-        console.log("!!!!!!!!!!!!!")
-
         // decoded the token and check if it contains the secret key from our server
         // verify that the token contains the secret key
         const decodedToken = await jwt.verify(token, process.env.SECRET_KEY)
-        console.log("decoded token")
-        console.log(decodedToken.id)
         // check if the id exists in our database
         const user = await User.findById(decodedToken.id)
-        console.log("user")
-        console.log(user)
-        console.log("!!!!!!!!!!!!!")
-        // if a user has been found in our database using the id encoded in the token
-        if(user) {
-            // move on to the controller
-            next()
-        } else {
-            throw new Error ("user is not authorised")
-        }
+
+        // if a user isn't found in our database on the line above, throw a new error to the catch block
+        if(!user) {
+            throw new Error("User not authorised")
+        } 
+        // if user does exist create a new object in the request object so we can access futher down
+        // futher down in the line in the request which in this case will be the login controller 
+        req.authUser = user
+        console.log("inside token middleware function")
+        console.log(req.authUser)
+        // call next() and move onto the controller
+        next()
     } catch (error) {
         console.log(error)
         res.status(500).send({error: error.message})
